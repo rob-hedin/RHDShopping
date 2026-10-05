@@ -1,0 +1,621 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7C52592CFB298BEFDC580235 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86DB401A1FF26505D9025321 /* Assets.xcassets */; };
+		04B87ADADE495491A125886B /* ProductSearching.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FEE655D31CCD0A02E7642D /* ProductSearching.swift */; };
+		080DD319C112B3E669B3B16C /* StorePickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B6921E15AC79C3FE036CF /* StorePickerViewModel.swift */; };
+		087608714F9BF9688B210FDA /* StoreLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA84A5090ABCD15BF5E15ACA /* StoreLocationTests.swift */; };
+		097F1A751C8E0BDD3A7773FC /* CopyConfirmationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60773061D6F73B283AA471D5 /* CopyConfirmationSheet.swift */; };
+		0CBF358AE6CE1CEE845421E4 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10134C48556F80E385F7E8D /* AppModel.swift */; };
+		0F6E9DDE7CD93AD34FF0E8AC /* StoreLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7822F15B95D96C74CE7EF50F /* StoreLocator.swift */; };
+		19AB629B0DD4D4CAAD22A7B0 /* ShoppingListStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA51F8E7864D27F56FB3290A /* ShoppingListStore.swift */; };
+		1AF548A1AAA7AEA6C4B3A651 /* ProductListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C236AA1C18E4960887AD93 /* ProductListView.swift */; };
+		23F9D6DD9B2D9E41E739BA87 /* ProductListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170347F82B069EB1AE3000EA /* ProductListViewModel.swift */; };
+		252DE0178758D02742479F52 /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC736AEE2CD5BDCFE0305EB /* ProductDetailView.swift */; };
+		333087349376A19F8CDC87F9 /* ShoppingListLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17AD178D6247BFABBD9BD7F /* ShoppingListLibraryTests.swift */; };
+		36D789258D6C3850B04DC879 /* FinishConfirmationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9C56773D5E6C0558532D24 /* FinishConfirmationSheet.swift */; };
+		3956F53E1B0D8236E215E6C7 /* ShoppingListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4ECB0BAC044514263882E9 /* ShoppingListRowView.swift */; };
+		4576AEB2717CDFF3B53D21B2 /* StoreResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C47F9A1E89288CFBC0F74C /* StoreResolver.swift */; };
+		48C46ABB4F98456BE73CE84D /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3571E77CF4C445F23874FC /* AppConfiguration.swift */; };
+		51D8ACC22C6A66E2762C48E7 /* HistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99D6E738C9A3C7067AAD624 /* HistoryDetailView.swift */; };
+		53D96C8BB7E5875BE67A7085 /* QuantityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56F37CC6DDD95E280A56888 /* QuantityTests.swift */; };
+		5B3BEE53522DCDA787E232EE /* InMemoryShoppingListStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129809DB1B7432BF31AB714F /* InMemoryShoppingListStore.swift */; };
+		5D02D51D4F742DE78B6F8382 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06039F2CB8A4982ECC5FB03 /* RootView.swift */; };
+		61CFB2EEF291FDD4050E40F3 /* ProductDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142586105C98E873CDA6D362 /* ProductDisplayItem.swift */; };
+		6C032515B94C84C3A1E6A3FC /* StoreRefreshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1E9E876A8A10411216EC1A /* StoreRefreshTests.swift */; };
+		6DCF0C3BECE6C28612F2C5AA /* StoreHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E5E08144A9702D5608789E /* StoreHours.swift */; };
+		6E9932208EA6ADA55D843961 /* ProductDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B309802B533BD12950659342 /* ProductDetailViewModel.swift */; };
+		73234AF00266D7C25CC0E655 /* StorePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099F11E68104B537F1D2B2F /* StorePickerView.swift */; };
+		7495F705F6210B61A98F93AA /* StoreStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99D6A41885F1CBBBE3E683B /* StoreStatus.swift */; };
+		79DFCCAE5379BF0834B188DC /* EditQuantitySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 208740A580D88B0768A021A7 /* EditQuantitySheet.swift */; };
+		8D2EB391733BFB0B2F1AD5E3 /* LocationProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC698B65029F1545642AB52 /* LocationProviding.swift */; };
+		9003B44737D2908EE3F1C8A5 /* ShoppingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607C9A9D450155439A1D3CC9 /* ShoppingList.swift */; };
+		92F1A603EF3FEC0F458C3CB5 /* HistoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A618D138A1A9081A03812EEF /* HistoryListView.swift */; };
+		950FAC361B0200CDC19BC917 /* SystemLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07694BF9680861A16A47BBA6 /* SystemLocationProvider.swift */; };
+		9CCE282103D8383CE260C428 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA608DEDA6A33599DC488A2C /* MainView.swift */; };
+		A479FF6415EB10300DF05AB2 /* PickQuantitySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2238BA167196FAA529ECA987 /* PickQuantitySheet.swift */; };
+		AF1547A44E77CC0F56FECAB6 /* ShoppingListLibraryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C51B9B39E709077F68DD98 /* ShoppingListLibraryModel.swift */; };
+		B23CE751D9D764F583E51761 /* StoreCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C7E3C16CD24EC8AB75CF31 /* StoreCandidate.swift */; };
+		BE4767D2DDDF9FA3AEC45136 /* StoreDataRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D98E4A5CD5AA8C92D950D4 /* StoreDataRefresher.swift */; };
+		C47726BF59A73A842CE08730 /* ProductFetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E71C1869404CB9B394C87D /* ProductFetching.swift */; };
+		C62A79DD1CE98918A91026FE /* ShoppingListLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655684D0746A7F8AD24BBE8A /* ShoppingListLibrary.swift */; };
+		C6F823B1F31F67FD97DC34E5 /* ShoppingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CDEF3E2C4DFFA8734D9686 /* ShoppingListView.swift */; };
+		C8307101A13C5D36D78DA23A /* ProductRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B991E7601C014775AF0C56 /* ProductRowView.swift */; };
+		CDBA1D8E1249527C7ABB9C43 /* RHKrogerAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 311C7ECFAEBA47F29559BC34 /* RHKrogerAPI */; };
+		D1C014787C960C8D0AAA3B62 /* RHDShoppingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500395BCC8CBAAE8183DB52F /* RHDShoppingApp.swift */; };
+		D2DB8EBAF6E64DDA3520C394 /* RecentSearches.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC75E2528D5B177CFD8C3B8 /* RecentSearches.swift */; };
+		D33759838F9EDF17253B16BE /* ProductDetailDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5AE32CCA7B0D9885128171 /* ProductDetailDisplay.swift */; };
+		D8C8ADEAD20718AE1B260CAE /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A01EDA19452245B4933F8F9 /* ShoppingListViewModel.swift */; };
+		DB1EF6E4C6B493D3313C7A06 /* StoreSearching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A09A07778475BD42DCD19 /* StoreSearching.swift */; };
+		DEBB9851EA5827C9F296FC12 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F289A2A0C4218D47E11BA237 /* SettingsView.swift */; };
+		F16E07694AE643DD98F2169F /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43625988EAFFA2B47B76D317 /* SplashView.swift */; };
+		FBDBE298FFDD955A7A7D969C /* ShoppingListItemDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EA55F8F459DE0AF1D2D3F /* ShoppingListItemDisplay.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		431387EB7262E1CFC79B125E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E3435DDA2687639586BF0B70;
+			remoteInfo = RHDShopping;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		86DB401A1FF26505D9025321 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		05C7E3C16CD24EC8AB75CF31 /* StoreCandidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreCandidate.swift; sourceTree = "<group>"; };
+		07694BF9680861A16A47BBA6 /* SystemLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemLocationProvider.swift; sourceTree = "<group>"; };
+		09692E82B5D0A5A081D62416 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		0B7A09A07778475BD42DCD19 /* StoreSearching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSearching.swift; sourceTree = "<group>"; };
+		0D5AE32CCA7B0D9885128171 /* ProductDetailDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailDisplay.swift; sourceTree = "<group>"; };
+		129809DB1B7432BF31AB714F /* InMemoryShoppingListStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryShoppingListStore.swift; sourceTree = "<group>"; };
+		12C47F9A1E89288CFBC0F74C /* StoreResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreResolver.swift; sourceTree = "<group>"; };
+		142586105C98E873CDA6D362 /* ProductDisplayItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDisplayItem.swift; sourceTree = "<group>"; };
+		170347F82B069EB1AE3000EA /* ProductListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListViewModel.swift; sourceTree = "<group>"; };
+		1A3571E77CF4C445F23874FC /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		208740A580D88B0768A021A7 /* EditQuantitySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditQuantitySheet.swift; sourceTree = "<group>"; };
+		2238BA167196FAA529ECA987 /* PickQuantitySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickQuantitySheet.swift; sourceTree = "<group>"; };
+		367B9F293074252900E00271 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		3A01EDA19452245B4933F8F9 /* ShoppingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListViewModel.swift; sourceTree = "<group>"; };
+		43625988EAFFA2B47B76D317 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		44CDEF3E2C4DFFA8734D9686 /* ShoppingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListView.swift; sourceTree = "<group>"; };
+		500395BCC8CBAAE8183DB52F /* RHDShoppingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDShoppingApp.swift; sourceTree = "<group>"; };
+		60773061D6F73B283AA471D5 /* CopyConfirmationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyConfirmationSheet.swift; sourceTree = "<group>"; };
+		607C9A9D450155439A1D3CC9 /* ShoppingList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingList.swift; sourceTree = "<group>"; };
+		655684D0746A7F8AD24BBE8A /* ShoppingListLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListLibrary.swift; sourceTree = "<group>"; };
+		68E5E08144A9702D5608789E /* StoreHours.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreHours.swift; sourceTree = "<group>"; };
+		7822F15B95D96C74CE7EF50F /* StoreLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreLocator.swift; sourceTree = "<group>"; };
+		7E1E9E876A8A10411216EC1A /* StoreRefreshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreRefreshTests.swift; sourceTree = "<group>"; };
+		7EC736AEE2CD5BDCFE0305EB /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
+		84337AD8D27FCD69AF2C4FC2 /* RHDShopping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RHDShopping.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8AC698B65029F1545642AB52 /* LocationProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviding.swift; sourceTree = "<group>"; };
+		933B6921E15AC79C3FE036CF /* StorePickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorePickerViewModel.swift; sourceTree = "<group>"; };
+		97E71C1869404CB9B394C87D /* ProductFetching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFetching.swift; sourceTree = "<group>"; };
+		A618D138A1A9081A03812EEF /* HistoryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryListView.swift; sourceTree = "<group>"; };
+		A7FEE655D31CCD0A02E7642D /* ProductSearching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSearching.swift; sourceTree = "<group>"; };
+		A9C51B9B39E709077F68DD98 /* ShoppingListLibraryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListLibraryModel.swift; sourceTree = "<group>"; };
+		AA51F8E7864D27F56FB3290A /* ShoppingListStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListStore.swift; sourceTree = "<group>"; };
+		AEC75E2528D5B177CFD8C3B8 /* RecentSearches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearches.swift; sourceTree = "<group>"; };
+		B06039F2CB8A4982ECC5FB03 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		B309802B533BD12950659342 /* ProductDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewModel.swift; sourceTree = "<group>"; };
+		B5A2BEBE86215B3F6D160426 /* RHDShoppingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RHDShoppingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5C236AA1C18E4960887AD93 /* ProductListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListView.swift; sourceTree = "<group>"; };
+		C10134C48556F80E385F7E8D /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		C17AD178D6247BFABBD9BD7F /* ShoppingListLibraryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListLibraryTests.swift; sourceTree = "<group>"; };
+		C91EA55F8F459DE0AF1D2D3F /* ShoppingListItemDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListItemDisplay.swift; sourceTree = "<group>"; };
+		D099F11E68104B537F1D2B2F /* StorePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorePickerView.swift; sourceTree = "<group>"; };
+		D99D6A41885F1CBBBE3E683B /* StoreStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreStatus.swift; sourceTree = "<group>"; };
+		D99D6E738C9A3C7067AAD624 /* HistoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetailView.swift; sourceTree = "<group>"; };
+		E0CE2D99F67F0A3B3535B595 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
+		E0D98E4A5CD5AA8C92D950D4 /* StoreDataRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreDataRefresher.swift; sourceTree = "<group>"; };
+		EA4ECB0BAC044514263882E9 /* ShoppingListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListRowView.swift; sourceTree = "<group>"; };
+		EA84A5090ABCD15BF5E15ACA /* StoreLocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreLocationTests.swift; sourceTree = "<group>"; };
+		F289A2A0C4218D47E11BA237 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F56F37CC6DDD95E280A56888 /* QuantityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantityTests.swift; sourceTree = "<group>"; };
+		F5B991E7601C014775AF0C56 /* ProductRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRowView.swift; sourceTree = "<group>"; };
+		FA608DEDA6A33599DC488A2C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		FC2D915B6CCE5D5A2A11B9C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC9C56773D5E6C0558532D24 /* FinishConfirmationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishConfirmationSheet.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CB7AB52839439D30D9F16B7D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF4514EEB7D017B9291846EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDBA1D8E1249527C7ABB9C43 /* RHKrogerAPI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1029F7BBD2FC8876965F659D /* config */ = {
+			isa = PBXGroup;
+			children = (
+				367B9F293074252900E00271 /* Secrets.xcconfig */,
+				09692E82B5D0A5A081D62416 /* Base.xcconfig */,
+				FC2D915B6CCE5D5A2A11B9C3 /* Info.plist */,
+				E0CE2D99F67F0A3B3535B595 /* Secrets.example.xcconfig */,
+			);
+			path = config;
+			sourceTree = "<group>";
+		};
+		1129B6A53940C88B539F2B2B /* src */ = {
+			isa = PBXGroup;
+			children = (
+				9B006A20056C6AFCCC28235A /* app */,
+				DD402139981D047F5B27C542 /* location */,
+				AF6722B1E2C68C51B9A35F29 /* model */,
+				9BC162FDE2DF94C8860431C2 /* views */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		518DA81DB9B99529C0C0AEBE = {
+			isa = PBXGroup;
+			children = (
+				1029F7BBD2FC8876965F659D /* config */,
+				1129B6A53940C88B539F2B2B /* src */,
+				A0937472EE5878FA82CB0F7E /* tests */,
+				547D009064F7C3F13BEF3460 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		547D009064F7C3F13BEF3460 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				84337AD8D27FCD69AF2C4FC2 /* RHDShopping.app */,
+				B5A2BEBE86215B3F6D160426 /* RHDShoppingTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		590EF9F9235D41632A8E0CF3 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				F56F37CC6DDD95E280A56888 /* QuantityTests.swift */,
+				C17AD178D6247BFABBD9BD7F /* ShoppingListLibraryTests.swift */,
+				EA84A5090ABCD15BF5E15ACA /* StoreLocationTests.swift */,
+				7E1E9E876A8A10411216EC1A /* StoreRefreshTests.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		9B006A20056C6AFCCC28235A /* app */ = {
+			isa = PBXGroup;
+			children = (
+				1A3571E77CF4C445F23874FC /* AppConfiguration.swift */,
+				86DB401A1FF26505D9025321 /* Assets.xcassets */,
+				C10134C48556F80E385F7E8D /* AppModel.swift */,
+				500395BCC8CBAAE8183DB52F /* RHDShoppingApp.swift */,
+			);
+			path = app;
+			sourceTree = "<group>";
+		};
+		9BC162FDE2DF94C8860431C2 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				60773061D6F73B283AA471D5 /* CopyConfirmationSheet.swift */,
+				208740A580D88B0768A021A7 /* EditQuantitySheet.swift */,
+				FC9C56773D5E6C0558532D24 /* FinishConfirmationSheet.swift */,
+				D99D6E738C9A3C7067AAD624 /* HistoryDetailView.swift */,
+				A618D138A1A9081A03812EEF /* HistoryListView.swift */,
+				FA608DEDA6A33599DC488A2C /* MainView.swift */,
+				2238BA167196FAA529ECA987 /* PickQuantitySheet.swift */,
+				0D5AE32CCA7B0D9885128171 /* ProductDetailDisplay.swift */,
+				7EC736AEE2CD5BDCFE0305EB /* ProductDetailView.swift */,
+				B309802B533BD12950659342 /* ProductDetailViewModel.swift */,
+				142586105C98E873CDA6D362 /* ProductDisplayItem.swift */,
+				97E71C1869404CB9B394C87D /* ProductFetching.swift */,
+				B5C236AA1C18E4960887AD93 /* ProductListView.swift */,
+				170347F82B069EB1AE3000EA /* ProductListViewModel.swift */,
+				F5B991E7601C014775AF0C56 /* ProductRowView.swift */,
+				A7FEE655D31CCD0A02E7642D /* ProductSearching.swift */,
+				B06039F2CB8A4982ECC5FB03 /* RootView.swift */,
+				F289A2A0C4218D47E11BA237 /* SettingsView.swift */,
+				C91EA55F8F459DE0AF1D2D3F /* ShoppingListItemDisplay.swift */,
+				EA4ECB0BAC044514263882E9 /* ShoppingListRowView.swift */,
+				44CDEF3E2C4DFFA8734D9686 /* ShoppingListView.swift */,
+				3A01EDA19452245B4933F8F9 /* ShoppingListViewModel.swift */,
+				43625988EAFFA2B47B76D317 /* SplashView.swift */,
+				D099F11E68104B537F1D2B2F /* StorePickerView.swift */,
+				933B6921E15AC79C3FE036CF /* StorePickerViewModel.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		A0937472EE5878FA82CB0F7E /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				590EF9F9235D41632A8E0CF3 /* model */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		AF6722B1E2C68C51B9A35F29 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				129809DB1B7432BF31AB714F /* InMemoryShoppingListStore.swift */,
+				AEC75E2528D5B177CFD8C3B8 /* RecentSearches.swift */,
+				607C9A9D450155439A1D3CC9 /* ShoppingList.swift */,
+				655684D0746A7F8AD24BBE8A /* ShoppingListLibrary.swift */,
+				A9C51B9B39E709077F68DD98 /* ShoppingListLibraryModel.swift */,
+				AA51F8E7864D27F56FB3290A /* ShoppingListStore.swift */,
+				E0D98E4A5CD5AA8C92D950D4 /* StoreDataRefresher.swift */,
+				D99D6A41885F1CBBBE3E683B /* StoreStatus.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		DD402139981D047F5B27C542 /* location */ = {
+			isa = PBXGroup;
+			children = (
+				8AC698B65029F1545642AB52 /* LocationProviding.swift */,
+				05C7E3C16CD24EC8AB75CF31 /* StoreCandidate.swift */,
+				68E5E08144A9702D5608789E /* StoreHours.swift */,
+				7822F15B95D96C74CE7EF50F /* StoreLocator.swift */,
+				12C47F9A1E89288CFBC0F74C /* StoreResolver.swift */,
+				0B7A09A07778475BD42DCD19 /* StoreSearching.swift */,
+				07694BF9680861A16A47BBA6 /* SystemLocationProvider.swift */,
+			);
+			path = location;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5DED2D04DB49D4091162647E /* RHDShoppingTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5A230C5C352779E4F6499D2 /* Build configuration list for PBXNativeTarget "RHDShoppingTests" */;
+			buildPhases = (
+				F0A67BF6F2CB86D280C3C7FF /* Sources */,
+				CB7AB52839439D30D9F16B7D /* Frameworks */,
+				9D10F999022269F4D36FA31E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				12135613CE93203A2C467133 /* PBXTargetDependency */,
+			);
+			name = RHDShoppingTests;
+			productName = RHDShoppingTests;
+			productReference = B5A2BEBE86215B3F6D160426 /* RHDShoppingTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E3435DDA2687639586BF0B70 /* RHDShopping */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5505F9AF814A7F0992DE2402 /* Build configuration list for PBXNativeTarget "RHDShopping" */;
+			buildPhases = (
+				33DBE21FFEC4D7631E4F9273 /* Sources */,
+				EF4514EEB7D017B9291846EE /* Frameworks */,
+				015916E0E72C2E5C03A51AD6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RHDShopping;
+			packageProductDependencies = (
+				311C7ECFAEBA47F29559BC34 /* RHKrogerAPI */,
+			);
+			productName = RHDShopping;
+			productReference = 84337AD8D27FCD69AF2C4FC2 /* RHDShopping.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46F86FAA6BBF9AC94A7E4595 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+			};
+			buildConfigurationList = AD8DC1A475C1871509FE9877 /* Build configuration list for PBXProject "RHDShopping" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 518DA81DB9B99529C0C0AEBE;
+			packageReferences = (
+				715E1E3F015A64BA0327CAEF /* XCLocalSwiftPackageReference "../RHKrogerAPI" */,
+			);
+			productRefGroup = 547D009064F7C3F13BEF3460 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E3435DDA2687639586BF0B70 /* RHDShopping */,
+				5DED2D04DB49D4091162647E /* RHDShoppingTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		015916E0E72C2E5C03A51AD6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C52592CFB298BEFDC580235 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D10F999022269F4D36FA31E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		33DBE21FFEC4D7631E4F9273 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48C46ABB4F98456BE73CE84D /* AppConfiguration.swift in Sources */,
+				0CBF358AE6CE1CEE845421E4 /* AppModel.swift in Sources */,
+				D1C014787C960C8D0AAA3B62 /* RHDShoppingApp.swift in Sources */,
+				8D2EB391733BFB0B2F1AD5E3 /* LocationProviding.swift in Sources */,
+				B23CE751D9D764F583E51761 /* StoreCandidate.swift in Sources */,
+				6DCF0C3BECE6C28612F2C5AA /* StoreHours.swift in Sources */,
+				0F6E9DDE7CD93AD34FF0E8AC /* StoreLocator.swift in Sources */,
+				4576AEB2717CDFF3B53D21B2 /* StoreResolver.swift in Sources */,
+				DB1EF6E4C6B493D3313C7A06 /* StoreSearching.swift in Sources */,
+				950FAC361B0200CDC19BC917 /* SystemLocationProvider.swift in Sources */,
+				5B3BEE53522DCDA787E232EE /* InMemoryShoppingListStore.swift in Sources */,
+				D2DB8EBAF6E64DDA3520C394 /* RecentSearches.swift in Sources */,
+				9003B44737D2908EE3F1C8A5 /* ShoppingList.swift in Sources */,
+				C62A79DD1CE98918A91026FE /* ShoppingListLibrary.swift in Sources */,
+				AF1547A44E77CC0F56FECAB6 /* ShoppingListLibraryModel.swift in Sources */,
+				19AB629B0DD4D4CAAD22A7B0 /* ShoppingListStore.swift in Sources */,
+				BE4767D2DDDF9FA3AEC45136 /* StoreDataRefresher.swift in Sources */,
+				7495F705F6210B61A98F93AA /* StoreStatus.swift in Sources */,
+				097F1A751C8E0BDD3A7773FC /* CopyConfirmationSheet.swift in Sources */,
+				79DFCCAE5379BF0834B188DC /* EditQuantitySheet.swift in Sources */,
+				36D789258D6C3850B04DC879 /* FinishConfirmationSheet.swift in Sources */,
+				51D8ACC22C6A66E2762C48E7 /* HistoryDetailView.swift in Sources */,
+				92F1A603EF3FEC0F458C3CB5 /* HistoryListView.swift in Sources */,
+				9CCE282103D8383CE260C428 /* MainView.swift in Sources */,
+				A479FF6415EB10300DF05AB2 /* PickQuantitySheet.swift in Sources */,
+				D33759838F9EDF17253B16BE /* ProductDetailDisplay.swift in Sources */,
+				252DE0178758D02742479F52 /* ProductDetailView.swift in Sources */,
+				6E9932208EA6ADA55D843961 /* ProductDetailViewModel.swift in Sources */,
+				61CFB2EEF291FDD4050E40F3 /* ProductDisplayItem.swift in Sources */,
+				C47726BF59A73A842CE08730 /* ProductFetching.swift in Sources */,
+				1AF548A1AAA7AEA6C4B3A651 /* ProductListView.swift in Sources */,
+				23F9D6DD9B2D9E41E739BA87 /* ProductListViewModel.swift in Sources */,
+				C8307101A13C5D36D78DA23A /* ProductRowView.swift in Sources */,
+				04B87ADADE495491A125886B /* ProductSearching.swift in Sources */,
+				5D02D51D4F742DE78B6F8382 /* RootView.swift in Sources */,
+				DEBB9851EA5827C9F296FC12 /* SettingsView.swift in Sources */,
+				FBDBE298FFDD955A7A7D969C /* ShoppingListItemDisplay.swift in Sources */,
+				3956F53E1B0D8236E215E6C7 /* ShoppingListRowView.swift in Sources */,
+				C6F823B1F31F67FD97DC34E5 /* ShoppingListView.swift in Sources */,
+				D8C8ADEAD20718AE1B260CAE /* ShoppingListViewModel.swift in Sources */,
+				F16E07694AE643DD98F2169F /* SplashView.swift in Sources */,
+				73234AF00266D7C25CC0E655 /* StorePickerView.swift in Sources */,
+				080DD319C112B3E669B3B16C /* StorePickerViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F0A67BF6F2CB86D280C3C7FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53D96C8BB7E5875BE67A7085 /* QuantityTests.swift in Sources */,
+				333087349376A19F8CDC87F9 /* ShoppingListLibraryTests.swift in Sources */,
+				087608714F9BF9688B210FDA /* StoreLocationTests.swift in Sources */,
+				6C032515B94C84C3A1E6A3FC /* StoreRefreshTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		12135613CE93203A2C467133 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E3435DDA2687639586BF0B70 /* RHDShopping */;
+			targetProxy = 431387EB7262E1CFC79B125E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		06125DCB1954C4F7EEE69894 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		699FCDBED06EC64C8A6B513F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 09692E82B5D0A5A081D62416 /* Base.xcconfig */;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SZMB83JQ7N;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = config/Info.plist;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				INFOPLIST_KEY_CFBundleDisplayName = "RHD Shopping";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to find the nearest store. It stays on your device.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.robhedin.RHDShopping;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		AACF5BDB2BC481EB947517D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B1F05F06510EE3683971BC0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.robhedin.RHDShopping.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RHDShopping.app/RHDShopping";
+			};
+			name = Debug;
+		};
+		C0DD1C3E4BFC124D878FE440 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 367B9F293074252900E00271 /* Secrets.xcconfig */;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SZMB83JQ7N;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = config/Info.plist;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				INFOPLIST_KEY_CFBundleDisplayName = "RHD Shopping";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to find the nearest store. It stays on your device.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.robhedin.RHDShopping;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		D7748B0D11C986601399B73D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.robhedin.RHDShopping.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RHDShopping.app/RHDShopping";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5505F9AF814A7F0992DE2402 /* Build configuration list for PBXNativeTarget "RHDShopping" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0DD1C3E4BFC124D878FE440 /* Debug */,
+				699FCDBED06EC64C8A6B513F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AD8DC1A475C1871509FE9877 /* Build configuration list for PBXProject "RHDShopping" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06125DCB1954C4F7EEE69894 /* Debug */,
+				AACF5BDB2BC481EB947517D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E5A230C5C352779E4F6499D2 /* Build configuration list for PBXNativeTarget "RHDShoppingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1F05F06510EE3683971BC0B /* Debug */,
+				D7748B0D11C986601399B73D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		715E1E3F015A64BA0327CAEF /* XCLocalSwiftPackageReference "../RHKrogerAPI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../RHKrogerAPI;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		311C7ECFAEBA47F29559BC34 /* RHKrogerAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RHKrogerAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+}

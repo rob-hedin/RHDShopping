@@ -1,0 +1,10 @@
+// Shared build settings for the app target.
+//
+// Kroger credentials live in Secrets.xcconfig, which git ignores. Copy
+// Secrets.example.xcconfig to Secrets.xcconfig and fill it in. The `?` makes
+// the include optional, so the project still builds without it (the app then
+// shows a "Missing Kroger credentials" message instead of starting).
+#include? "Secrets.xcconfig"
+
+KROGER_CLIENT_ID =
+KROGER_CLIENT_SECRET =
