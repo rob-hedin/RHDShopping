@@ -13,13 +13,14 @@ import RHKrogerAPI
 /// `onAddSelected`.
 ///
 /// Tapping a row (outside its checkbox) pushes the product's detail screen
-/// onto this view's own stack. "Add to List" there just checks the row and
-/// returns here, so adding still happens in one place: the footer button.
+/// onto this view's own stack. "Add to List" there just checks the row (at
+/// the quantity chosen there) and returns here, so adding still happens in
+/// one place: the footer button. A checked row shows a quantity stepper.
 struct ProductListView: View {
     @StateObject private var viewModel: ProductListViewModel
     @State private var path: [ProductDisplayItem] = []
     let onBack: () -> Void
-    let onAddSelected: ([KrogerProduct]) -> Void
+    let onAddSelected: ([SelectedProduct]) -> Void
     /// Builds the detail screen's view model for a tapped row. The caller
     /// owns the client (and store), so the list doesn't need to.
     let makeDetailViewModel: (ProductDisplayItem) -> ProductDetailViewModel
@@ -28,7 +29,7 @@ struct ProductListView: View {
         viewModel: @autoclosure @escaping () -> ProductListViewModel,
         makeDetailViewModel: @escaping (ProductDisplayItem) -> ProductDetailViewModel,
         onBack: @escaping () -> Void,
-        onAddSelected: @escaping ([KrogerProduct]) -> Void
+        onAddSelected: @escaping ([SelectedProduct]) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel())
         self.makeDetailViewModel = makeDetailViewModel
@@ -57,8 +58,8 @@ struct ProductListView: View {
             .navigationDestination(for: ProductDisplayItem.self) { item in
                 ProductDetailView(
                     viewModel: makeDetailViewModel(item),
-                    onAddToList: { _ in
-                        viewModel.select(item)
+                    onAddToList: { _, quantity in
+                        viewModel.select(item, quantity: quantity)
                         path.removeAll()
                     }
                 )
@@ -111,7 +112,9 @@ struct ProductListView: View {
                     ProductRowView(
                         item: item,
                         isSelected: viewModel.isSelected(item),
+                        quantity: viewModel.quantity(for: item),
                         onToggle: { viewModel.toggleSelection(item) },
+                        onQuantityChange: { viewModel.setQuantity($0, for: item) },
                         onOpen: { path.append(item) }
                     )
                 }
@@ -136,7 +139,9 @@ struct ProductListView: View {
     }
 
     private var footerText: String {
-        viewModel.selectedCount == 1 ? "1 item selected" : "\(viewModel.selectedCount) items selected"
+        let items = viewModel.selectedCount == 1 ? "1 item selected" : "\(viewModel.selectedCount) items selected"
+        // Mention units only when they differ from the item count.
+        return viewModel.selectedUnitCount == viewModel.selectedCount ? items : "\(items) \u{B7} \(viewModel.selectedUnitCount) total"
     }
 }
 

@@ -154,16 +154,25 @@ final class ShoppingListViewModel: ObservableObject {
 
     // MARK: Adding
 
-    /// Adds products from the picker. A product already on the list is left
-    /// as it is (the same rule as copying from history).
-    func add(_ products: [KrogerProduct]) {
-        let incoming = products.map { $0.asShoppingListItem() }
+    /// Adds products from the picker, each at the quantity the person chose.
+    func add(_ selections: [SelectedProduct]) {
+        add(items: selections.map { $0.product.asShoppingListItem(quantityRequested: $0.quantity) })
+    }
+
+    /// Adds entries to the list. A product that's new is appended; one already
+    /// on the list has the new quantity added to what's wanted, since asking
+    /// for more of something means more of it. Picked units are never touched.
+    func add(items incoming: [ShoppingListItemDisplay]) {
         for item in incoming {
             if let stock = item.stock { stockByID[item.id] = stock }
         }
         library.updateActiveItems { items in
-            for item in incoming where !items.contains(where: { $0.id == item.id }) {
-                items.append(item)
+            for item in incoming {
+                if let index = items.firstIndex(where: { $0.id == item.id }) {
+                    items[index].quantityRequested += item.quantityRequested
+                } else {
+                    items.append(item)
+                }
             }
         }
     }

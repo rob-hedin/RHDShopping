@@ -5,16 +5,17 @@ import RHKrogerAPI
 /// pushed from the product picker, so unlike `ProductListView` it relies on
 /// the surrounding `NavigationStack` for its back button.
 ///
-/// `onAddToList` hands back the full `KrogerProduct`, like the picker's
-/// `onAddSelected`; there's no cart or quantity here. Pass nil (a product
-/// already on the list, say) to hide the Add to List button.
+/// `onAddToList` hands back the full `KrogerProduct` and how many the person
+/// chose with the stepper beside the button; there's no cart here. Pass nil
+/// (a product already on the list, say) to hide the footer.
 struct ProductDetailView: View {
     @StateObject private var viewModel: ProductDetailViewModel
-    let onAddToList: ((KrogerProduct) -> Void)?
+    let onAddToList: ((KrogerProduct, Int) -> Void)?
+    @State private var quantity = 1
 
     init(
         viewModel: @autoclosure @escaping () -> ProductDetailViewModel,
-        onAddToList: ((KrogerProduct) -> Void)?
+        onAddToList: ((KrogerProduct, Int) -> Void)?
     ) {
         _viewModel = StateObject(wrappedValue: viewModel())
         self.onAddToList = onAddToList
@@ -215,11 +216,15 @@ struct ProductDetailView: View {
         .card()
     }
 
-    private func footer(_ onAddToList: @escaping (KrogerProduct) -> Void) -> some View {
-        HStack {
-            Spacer()
+    private func footer(_ onAddToList: @escaping (KrogerProduct, Int) -> Void) -> some View {
+        HStack(spacing: 16) {
+            Stepper(value: $quantity, in: ProductListViewModel.quantityRange) {
+                Text("Qty \(quantity)").font(.headline).monospacedDigit()
+            }
+            .fixedSize()
+            Spacer(minLength: 0)
             Button("Add to List") {
-                if let product = viewModel.product { onAddToList(product) }
+                if let product = viewModel.product { onAddToList(product, quantity) }
             }
             .buttonStyle(.borderedProminent)
             .disabled(viewModel.product == nil)
@@ -312,7 +317,7 @@ private let previewDetail = ProductDetailDisplay(
                 productID: "0001111041700", locationID: "01400943",
                 products: PreviewProductFetching(), initialDetail: previewDetail
             ),
-            onAddToList: { _ in }
+            onAddToList: { _, _ in }
         )
     }
 }

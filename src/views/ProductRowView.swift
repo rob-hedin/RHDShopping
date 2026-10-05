@@ -4,28 +4,51 @@ import SwiftUI
 /// price, and a checkbox — the card-style layout from the design exploration.
 ///
 /// Two separate tap targets: the checkbox toggles selection, and the rest of
-/// the row opens the product's detail screen.
+/// the row opens the product's detail screen. Once a row is checked, a
+/// quantity stepper appears under it.
 struct ProductRowView: View {
     let item: ProductDisplayItem
     let isSelected: Bool
+    /// How many will be added; only shown (and editable) while selected.
+    let quantity: Int
     let onToggle: () -> Void
+    let onQuantityChange: (Int) -> Void
     let onOpen: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
-            Button(action: onOpen) {
-                HStack(spacing: 12) {
-                    thumbnail
-                    details
-                    Spacer(minLength: 0)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 12) {
+                Button(action: onOpen) {
+                    HStack(spacing: 12) {
+                        thumbnail
+                        details
+                        Spacer(minLength: 0)
+                    }
+                    .contentShape(Rectangle())
                 }
-                .contentShape(Rectangle())
+                .buttonStyle(.plain)
+                .accessibilityHint("Shows product details")
+                selectionButton
             }
-            .buttonStyle(.plain)
-            .accessibilityHint("Shows product details")
-            selectionButton
+            if isSelected { quantityRow }
         }
         .padding(.vertical, 6)
+    }
+
+    private var quantityRow: some View {
+        HStack {
+            Text("Quantity").font(.subheadline.weight(.medium))
+            Spacer()
+            Stepper(
+                value: Binding(get: { quantity }, set: onQuantityChange),
+                in: ProductListViewModel.quantityRange
+            ) {
+                Text("\(quantity)").font(.headline).monospacedDigit()
+            }
+            .fixedSize()
+        }
+        .padding(.leading, 84)   // lines up under the text, past the thumbnail
+        .padding(.trailing, 4)
     }
 
     private var thumbnail: some View {
@@ -139,7 +162,9 @@ struct ProductRowView: View {
             pricePerUnit: 0.70
         ),
         isSelected: false,
+        quantity: 1,
         onToggle: {},
+        onQuantityChange: { _ in },
         onOpen: {}
     )
     .padding()
@@ -158,7 +183,9 @@ struct ProductRowView: View {
             pricePerUnit: 0.45
         ),
         isSelected: true,
+        quantity: 2,
         onToggle: {},
+        onQuantityChange: { _ in },
         onOpen: {}
     )
     .padding()
@@ -177,7 +204,9 @@ struct ProductRowView: View {
             pricePerUnit: nil
         ),
         isSelected: false,
+        quantity: 1,
         onToggle: {},
+        onQuantityChange: { _ in },
         onOpen: {}
     )
     .padding()
