@@ -45,9 +45,12 @@ final class SystemLocationProvider: NSObject, LocationProviding, CLLocationManag
     // MARK: CLLocationManagerDelegate
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        // Read the status here, where the manager is safe to touch, and hand
+        // only the plain value across to the main actor.
+        let status = manager.authorizationStatus
         Task { @MainActor in
-            guard manager.authorizationStatus != .notDetermined else { return }
-            let result = Self.map(manager.authorizationStatus)
+            guard status != .notDetermined else { return }
+            let result = Self.map(status)
             let waiters = authorizationWaiters
             authorizationWaiters = []
             waiters.forEach { $0.resume(returning: result) }

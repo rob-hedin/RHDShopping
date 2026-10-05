@@ -63,3 +63,6 @@ fastlane/test_output
 
 # Kroger API credentials (see src/app/AppConfiguration.swift)
 Secrets.xcconfig
+
+# Build output
+DerivedData/

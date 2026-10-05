@@ -8,7 +8,7 @@ import RHKrogerAPI
 /// without touching the network or holding a real `KrogerClient`.
 /// `KrogerProducts.search` already has this exact signature, so it
 /// satisfies the protocol with no extra code beyond the conformance below.
-protocol ProductSearching {
+protocol ProductSearching: Sendable {
     func search(
         term: String?,
         locationID: String?,

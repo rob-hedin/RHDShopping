@@ -2,9 +2,9 @@ import Foundation
 
 /// The Kroger API credentials, read from the app's Info.plist.
 ///
-/// The keys are `KROGER_CLIENT_ID` and `KROGER_CLIENT_SECRET`. Fill them in
-/// from an `.xcconfig` that is kept out of version control (listed in
-/// `.gitignore`), never by typing them into a committed file.
+/// The keys are `KROGER_CLIENT_ID` and `KROGER_CLIENT_SECRET`. `config/Info.plist`
+/// passes them through from `config/Secrets.xcconfig`, which is kept out of
+/// version control (listed in `.gitignore`), never typed into a committed file.
 struct AppConfiguration: Equatable {
     let clientID: String
     let clientSecret: String
@@ -15,7 +15,7 @@ struct AppConfiguration: Equatable {
         var errorDescription: String? {
             switch self {
             case .missing(let keys):
-                "Missing Kroger credentials: \(keys.joined(separator: ", ")). Add them to the app\u{2019}s Info.plist."
+                "Missing Kroger credentials (\(keys.joined(separator: ", "))). Copy config/Secrets.example.xcconfig to config/Secrets.xcconfig, fill it in, and rebuild."
             }
         }
     }

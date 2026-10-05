@@ -1,8 +1,7 @@
-// Written against a scratch package whose module is named `Model`.
-// When the app target exists, change the `@testable import` below to its module name.
+// Unit tests for the app's model, location and refresh logic. They use Swift Testing.
 import Foundation
 import Testing
-@testable import Model
+@testable import RHDShopping
 
 private func candidate(_ id: String, lat: Double?, lon: Double? = nil, hours: StoreHours? = nil) -> StoreCandidate {
     StoreCandidate(ref: StoreRef(id: id, name: "Store \(id)"), addressLine: "\(id) Main St",
