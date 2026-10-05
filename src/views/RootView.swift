@@ -5,19 +5,21 @@ import RHKrogerAPI
 /// shopping list (full screen), and History and Settings (pushed).
 ///
 /// It's handed its dependencies instead of making them, so the `App` can
-/// decide where the client, the saved lists and the store status come from.
+/// decide where the client, the saved lists and the store locator come from.
 /// Wrap it in a `LaunchGate` to show the splash while those are readied.
 struct RootView: View {
     let client: KrogerClient
     @ObservedObject var library: ShoppingListLibraryModel
-    let status: StoreStatus
-    let onRequestLocation: () -> Void
-    let onChooseStore: () -> Void
+    @ObservedObject var locator: StoreLocator
 
     @StateObject private var list: ShoppingListViewModel
     @State private var path: [Destination] = []
     @State private var search: SearchRequest?
     @State private var showingList = false
+    /// The store picker can open from the main screen or over the list, and a
+    /// sheet can't open from a screen that's covered, so each has its own flag.
+    @State private var showingStorePicker = false
+    @State private var showingStorePickerOverList = false
     @State private var detailItem: ProductDisplayItem?
     @State private var recents = RecentSearches().terms
 
@@ -30,22 +32,16 @@ struct RootView: View {
         var id: String { term }
     }
 
-    init(
-        client: KrogerClient,
-        library: ShoppingListLibraryModel,
-        status: StoreStatus,
-        onRequestLocation: @escaping () -> Void,
-        onChooseStore: @escaping () -> Void
-    ) {
+    init(client: KrogerClient, library: ShoppingListLibraryModel, locator: StoreLocator) {
         self.client = client
         self.library = library
-        self.status = status
-        self.onRequestLocation = onRequestLocation
-        self.onChooseStore = onChooseStore
+        self.locator = locator
         _list = StateObject(wrappedValue: ShoppingListViewModel(
-            library: library, mode: status.isInStore ? .inStore : .planning
+            library: library, mode: locator.status.isInStore ? .inStore : .planning
         ))
     }
+
+    private var status: StoreStatus { locator.status }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -57,10 +53,11 @@ struct RootView: View {
                 onOpenList: { showingList = true },
                 onOpenHistory: { path.append(.history) },
                 onOpenSettings: { path.append(.settings) },
-                onChooseStore: onChooseStore,
-                onRequestLocation: onRequestLocation
+                onChooseStore: { showingStorePicker = true },
+                onRequestLocation: { Task { await locator.requestPermission() } }
             )
             .toolbar(.hidden, for: .navigationBar)
+            .sheet(isPresented: $showingStorePicker) { storePicker(dismiss: { showingStorePicker = false }) }
             .navigationDestination(for: Destination.self) { destination in
                 switch destination {
                 case .history:
@@ -69,6 +66,13 @@ struct RootView: View {
                     SettingsView(library: library)
                 }
             }
+        }
+        // Prices, aisles and stock belong to a store, so bring the list up to
+        // date on launch and whenever the store changes. `.task(id:)` cancels
+        // the previous lookup when the store changes again.
+        .task(id: status.store?.id) {
+            guard let store = status.store else { return }
+            await list.refresh(for: store, using: .kroger(client.products))
         }
         // The list follows whether the person is in the store.
         .onChange(of: status.isInStore) { _, isInStore in
@@ -103,18 +107,40 @@ struct RootView: View {
         )
     }
 
+    private func storePicker(dismiss: @escaping () -> Void) -> some View {
+        StorePickerView(
+            viewModel: StorePickerViewModel(
+                search: KrogerStoreSearch(locations: client.locations),
+                userPoint: { locator.lastKnownPoint }
+            ),
+            selected: status.store,
+            onNearMe: {
+                await locator.requestPermission()
+                return locator.lastKnownPoint
+            },
+            onSelect: { store in
+                locator.choose(store)
+                dismiss()
+            },
+            onDone: dismiss
+        )
+    }
+
     private var shoppingList: some View {
         ShoppingListView(
             viewModel: list,
             storeName: status.store?.name,
             onBack: { showingList = false },
             onScan: {},
-            onChangeStore: onChooseStore,
+            onChangeStore: { showingStorePickerOverList = true },
             onViewDetails: { item in
                 // Show details over the list, not instead of it.
                 detailItem = item.product
             }
         )
+        .sheet(isPresented: $showingStorePickerOverList) {
+            storePicker(dismiss: { showingStorePickerOverList = false })
+        }
         .sheet(item: $detailItem) { item in
             NavigationStack {
                 ProductDetailView(

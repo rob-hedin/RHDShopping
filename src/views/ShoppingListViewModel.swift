@@ -31,11 +31,17 @@ final class ShoppingListViewModel: ObservableObject {
         didSet { defaults.set(includesOutOfStockInTotal, forKey: Self.includesOutOfStockKey) }
     }
     @Published private(set) var finishNotice: FinishNotice?
+    /// True while price, aisle and stock are being refreshed for a store.
+    @Published private(set) var isRefreshing = false
+    /// Set when a refresh found products the store doesn't carry.
+    @Published private(set) var storeNotice: String?
     @Published private var stockByID: [String: ProductDetailDisplay.Stock]
 
     let library: ShoppingListLibraryModel
     private let defaults: UserDefaults
     private var libraryObservation: AnyCancellable?
+    /// Counts refreshes so a slow, older one can't overwrite a newer one.
+    private var refreshGeneration = 0
     private static let includesOutOfStockKey = "shoppingList.includesOutOfStockInTotal"
 
     init(library: ShoppingListLibraryModel, mode: ShoppingMode = .inStore, defaults: UserDefaults = .standard) {
@@ -103,6 +109,47 @@ final class ShoppingListViewModel: ObservableObject {
 
     func totalText(for section: ShoppingListSection) -> String {
         (section == .needed ? neededTotal : pickedTotal).formatted(.currency(code: "USD"))
+    }
+
+    // MARK: Refreshing for a store
+
+    /// Brings the active list's price, aisle and stock up to date for `store`,
+    /// leaving quantities alone. Safe to call again whenever the store
+    /// changes: if a newer refresh starts, the older one's result is dropped.
+    /// A failure leaves the list as it was.
+    func refresh(for store: StoreRef, using refresher: StoreDataRefresher) async {
+        let ids = library.active.items.map(\.id)
+        guard !ids.isEmpty else {
+            storeNotice = nil
+            return
+        }
+        refreshGeneration += 1
+        let generation = refreshGeneration
+        isRefreshing = true
+        defer { if generation == refreshGeneration { isRefreshing = false } }
+
+        guard let result = try? await refresher.refresh(productIDs: ids, storeID: store.id),
+              generation == refreshGeneration else { return }
+
+        library.updateActiveItems { items in
+            for index in items.indices {
+                if let fresh = result.fresh[items[index].id] {
+                    items[index] = items[index].refreshed(from: fresh)
+                }
+            }
+        }
+        for (id, fresh) in result.fresh { stockByID[id] = fresh.stock }
+
+        let missing = result.missingIDs.count
+        storeNotice = missing == 0
+            ? nil
+            : (missing == 1
+                ? "1 item isn\u{2019}t sold at \(store.name)."
+                : "\(missing) items aren\u{2019}t sold at \(store.name).")
+    }
+
+    func dismissStoreNotice() {
+        storeNotice = nil
     }
 
     // MARK: Adding

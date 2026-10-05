@@ -60,6 +60,7 @@ struct ShoppingListView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 modeBanner
+                if let notice = viewModel.storeNotice { storeNoticeBanner(notice) }
                 if let notice = viewModel.finishNotice { finishBanner(notice) }
                 list
             }
@@ -101,6 +102,7 @@ struct ShoppingListView: View {
                 Text("**Shopping at \(storeName ?? "your store")** \u{B7} prices, aisles and stock for this store")
                     .font(.footnote)
                 Spacer(minLength: 0)
+                if viewModel.isRefreshing { ProgressView().controlSize(.small) }
                 if let onChangeStore {
                     Button("Change", action: onChangeStore).font(.footnote.weight(.semibold))
                 }
@@ -115,6 +117,24 @@ struct ShoppingListView: View {
                 .padding(.horizontal).padding(.vertical, 10)
                 .background(Color(.secondarySystemBackground), ignoresSafeAreaEdges: [])
         }
+    }
+
+    private func storeNoticeBanner(_ text: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "exclamationmark.triangle")
+            Text(text).font(.footnote)
+            Spacer(minLength: 0)
+            Button {
+                viewModel.dismissStoreNotice()
+            } label: {
+                Image(systemName: "xmark")
+                    .frame(width: 32, height: 32)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityLabel("Dismiss")
+        }
+        .padding(.horizontal).padding(.vertical, 8)
+        .background(Color.orange.opacity(0.15), ignoresSafeAreaEdges: [])
     }
 
     private func finishBanner(_ notice: ShoppingListViewModel.FinishNotice) -> some View {
