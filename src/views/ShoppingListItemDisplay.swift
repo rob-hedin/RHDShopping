@@ -3,7 +3,7 @@ import RHKrogerAPI
 
 /// Where to find a product on the shelf, trimmed to what a shopper needs:
 /// the aisle's own description, which side it's on, and the shelf number.
-struct AisleLocationDisplay: Hashable {
+struct AisleLocationDisplay: Hashable, Codable {
     let description: String?
     let side: String?
     let shelfNumber: String?
@@ -40,7 +40,7 @@ enum ShoppingListSection: Hashable {
 /// Picked with a quantity of 1 and in Needed with the 1 still remaining.
 /// Picking more than was requested is allowed; `quantityPicked` keeps the
 /// real count so the Picked total reflects what's actually in the cart.
-struct ShoppingListItemDisplay: Identifiable, Hashable {
+struct ShoppingListItemDisplay: Identifiable, Hashable, Codable {
     let id: String
     let product: ProductDisplayItem
     let aisle: AisleLocationDisplay?
@@ -50,6 +50,11 @@ struct ShoppingListItemDisplay: Identifiable, Hashable {
     /// Nil when the service reported nothing useful. Treated as unreliable:
     /// it only ever annotates a row, it never blocks picking it.
     var stock: ProductDetailDisplay.Stock?
+
+    /// Stock is live information about the current store, so it's never saved.
+    private enum CodingKeys: String, CodingKey {
+        case id, product, aisle, quantityRequested, quantityPicked
+    }
 
     /// How many are still needed; zero once the request is met or exceeded.
     var quantityRemaining: Int { max(quantityRequested - quantityPicked, 0) }

@@ -11,7 +11,7 @@ import RHKrogerAPI
 /// seam: it holds only what the product picker screen shows a person, it's
 /// a plain struct we can construct anywhere, and `KrogerProduct.asDisplayItem()`
 /// below is the one place that maps real API data onto it.
-struct ProductDisplayItem: Identifiable, Hashable {
+struct ProductDisplayItem: Identifiable, Hashable, Codable {
     let id: String
     let brand: String?
     let description: String

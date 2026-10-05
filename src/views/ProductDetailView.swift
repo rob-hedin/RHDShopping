@@ -6,14 +6,15 @@ import RHKrogerAPI
 /// the surrounding `NavigationStack` for its back button.
 ///
 /// `onAddToList` hands back the full `KrogerProduct`, like the picker's
-/// `onAddSelected`; there's no cart or quantity here.
+/// `onAddSelected`; there's no cart or quantity here. Pass nil (a product
+/// already on the list, say) to hide the Add to List button.
 struct ProductDetailView: View {
     @StateObject private var viewModel: ProductDetailViewModel
-    let onAddToList: (KrogerProduct) -> Void
+    let onAddToList: ((KrogerProduct) -> Void)?
 
     init(
         viewModel: @autoclosure @escaping () -> ProductDetailViewModel,
-        onAddToList: @escaping (KrogerProduct) -> Void
+        onAddToList: ((KrogerProduct) -> Void)?
     ) {
         _viewModel = StateObject(wrappedValue: viewModel())
         self.onAddToList = onAddToList
@@ -72,7 +73,9 @@ struct ProductDetailView: View {
             .padding()
         }
         .background(Color(.systemGroupedBackground))
-        .safeAreaInset(edge: .bottom) { footer }
+        .safeAreaInset(edge: .bottom) {
+            if let onAddToList { footer(onAddToList) }
+        }
     }
 
     // MARK: Sections
@@ -212,7 +215,7 @@ struct ProductDetailView: View {
         .card()
     }
 
-    private var footer: some View {
+    private func footer(_ onAddToList: @escaping (KrogerProduct) -> Void) -> some View {
         HStack {
             Spacer()
             Button("Add to List") {

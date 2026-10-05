@@ -1,99 +1,178 @@
+import Combine
 import Foundation
 import RHKrogerAPI
 
+/// Whether the person is building the list or standing in the store.
+/// Planning shows estimates and hides stock; in-store shows real prices,
+/// aisles and stock and lets them pick items.
+enum ShoppingMode {
+    case planning, inStore
+}
+
 /// Drives the shopping list screen.
 ///
-/// Unlike the product picker, there's no network call and no "confirm" step
-/// here: the products are already known (they came from the picker earlier),
-/// and recording a pick takes effect immediately.
+/// The list itself lives in the `ShoppingListLibraryModel` (which saves it);
+/// this view model reads from it and turns the person's taps into changes
+/// on it. The one thing it keeps for itself is each product's live stock
+/// level, which is never saved.
 @MainActor
 final class ShoppingListViewModel: ObservableObject {
-    @Published private(set) var items: [ShoppingListItemDisplay]
+    /// What the banner after finishing a list reports.
+    struct FinishNotice: Equatable {
+        let carriedCount: Int
+        let finishedOn: Date
+        let spent: Decimal
+    }
 
-    /// Whether items reported out of stock count toward the Needed total.
-    /// The person's choice, so it's remembered between launches.
+    @Published var mode: ShoppingMode
+    /// Whether items reported out of stock count toward the Needed total
+    /// (in-store only). The person's choice, so it's remembered.
     @Published var includesOutOfStockInTotal: Bool {
         didSet { defaults.set(includesOutOfStockInTotal, forKey: Self.includesOutOfStockKey) }
     }
+    @Published private(set) var finishNotice: FinishNotice?
+    @Published private var stockByID: [String: ProductDetailDisplay.Stock]
 
+    let library: ShoppingListLibraryModel
     private let defaults: UserDefaults
+    private var libraryObservation: AnyCancellable?
     private static let includesOutOfStockKey = "shoppingList.includesOutOfStockInTotal"
 
-    /// Builds the list from products already on hand (e.g. what the picker
-    /// screen's `onAddSelected` handed back), one of each, optionally
-    /// restoring which ones were already picked up.
-    init(products: [KrogerProduct], pickedUpProductIDs: Set<String> = [], defaults: UserDefaults = .standard) {
+    init(library: ShoppingListLibraryModel, mode: ShoppingMode = .inStore, defaults: UserDefaults = .standard) {
+        self.library = library
+        self.mode = mode
         self.defaults = defaults
         includesOutOfStockInTotal = defaults.object(forKey: Self.includesOutOfStockKey) as? Bool ?? true
-        items = products.map {
-            $0.asShoppingListItem(quantityPicked: pickedUpProductIDs.contains($0.id) ? 1 : 0)
+        stockByID = Dictionary(
+            library.active.items.compactMap { item in item.stock.map { (item.id, $0) } },
+            uniquingKeysWith: { first, _ in first }
+        )
+        // Forward the library's changes so this screen redraws when the list does.
+        libraryObservation = library.objectWillChange.sink { [weak self] _ in self?.objectWillChange.send() }
+    }
+
+    /// Seeds an in-memory list directly. This is what makes Previews
+    /// possible: `KrogerProduct` has no public initializer, so a preview
+    /// can't build a list from products.
+    convenience init(
+        items: [ShoppingListItemDisplay],
+        mode: ShoppingMode = .inStore,
+        defaults: UserDefaults = .standard
+    ) {
+        let library = ShoppingListLibraryModel(
+            store: InMemoryShoppingListStore(ShoppingListLibrary(active: ShoppingList(items: items))),
+            defaults: defaults
+        )
+        self.init(library: library, mode: mode, defaults: defaults)
+    }
+
+    // MARK: Items
+
+    /// The active list with live stock folded in. Stock is hidden while
+    /// planning, since it only means something at the store you're in.
+    var items: [ShoppingListItemDisplay] {
+        library.active.items.map { item in
+            var item = item
+            item.stock = mode == .inStore ? stockByID[item.id] : nil
+            return item
         }
     }
 
-    /// Seeds the list directly from display items. This is also what makes
-    /// Previews possible: `KrogerProduct` has no public initializer, so a
-    /// preview can't build the `products:` initializer's input.
-    init(items: [ShoppingListItemDisplay], defaults: UserDefaults = .standard) {
-        self.defaults = defaults
-        includesOutOfStockInTotal = defaults.object(forKey: Self.includesOutOfStockKey) as? Bool ?? true
-        self.items = items
-    }
-
-    // MARK: Sections
-
-    /// Items with at least one still to pick, in list order.
-    var neededItems: [ShoppingListItemDisplay] { items.filter { $0.quantity(in: .needed) != nil } }
-
-    /// Items with at least one picked, in list order.
-    var pickedItems: [ShoppingListItemDisplay] { items.filter { $0.quantity(in: .picked) != nil } }
-
     func items(in section: ShoppingListSection) -> [ShoppingListItemDisplay] {
-        section == .needed ? neededItems : pickedItems
+        items.filter { $0.quantity(in: section) != nil }
     }
 
     // MARK: Totals
 
-    /// What's left to spend. Out-of-stock items are skipped when the person
-    /// has turned that setting off; the row itself stays in the list.
+    /// What's left to spend. In-store, out-of-stock items are skipped when
+    /// the person has turned that setting off; the row itself stays.
     var neededTotal: Decimal {
-        neededItems
+        items(in: .needed)
             .filter { includesOutOfStockInTotal || !$0.isOutOfStock }
             .reduce(Decimal(0)) { $0 + $1.total(in: .needed) }
     }
 
-    /// What's been picked so far, counting every unit actually picked
-    /// (including any beyond what was requested).
+    /// What's been picked so far, counting every unit actually picked.
     var pickedTotal: Decimal {
-        pickedItems.reduce(Decimal(0)) { $0 + $1.total(in: .picked) }
+        items(in: .picked).reduce(Decimal(0)) { $0 + $1.total(in: .picked) }
     }
 
-    /// How many Needed rows the Needed total currently leaves out.
     var excludedOutOfStockCount: Int {
-        includesOutOfStockInTotal ? 0 : neededItems.filter(\.isOutOfStock).count
+        includesOutOfStockInTotal ? 0 : items(in: .needed).filter(\.isOutOfStock).count
     }
 
     func totalText(for section: ShoppingListSection) -> String {
         (section == .needed ? neededTotal : pickedTotal).formatted(.currency(code: "USD"))
     }
 
-    // MARK: Picking
+    // MARK: Adding
 
-    /// Records `quantity` more picked units for the product (the Needed
-    /// row's dialog). Fewer than remaining leaves the rest in Needed; more
-    /// than remaining is fine and just raises the picked count.
+    /// Adds products from the picker. A product already on the list is left
+    /// as it is (the same rule as copying from history).
+    func add(_ products: [KrogerProduct]) {
+        let incoming = products.map { $0.asShoppingListItem() }
+        for item in incoming {
+            if let stock = item.stock { stockByID[item.id] = stock }
+        }
+        library.updateActiveItems { items in
+            for item in incoming where !items.contains(where: { $0.id == item.id }) {
+                items.append(item)
+            }
+        }
+    }
+
+    // MARK: Picking (in store)
+
+    /// Records `quantity` more picked units. Fewer than remaining leaves the
+    /// rest in Needed; more is fine and just raises the picked count.
     func pick(_ quantity: Int, of item: ShoppingListItemDisplay) {
-        guard quantity > 0, let index = items.firstIndex(where: { $0.id == item.id }) else { return }
-        items[index].quantityPicked += quantity
+        guard quantity > 0 else { return }
+        edit(item) { $0.quantityPicked += quantity }
     }
 
-    /// Sets the product's picked quantity outright (the Picked row's dialog).
+    /// Sets the picked quantity outright (the Picked row's dialog).
     func setPickedQuantity(_ quantity: Int, of item: ShoppingListItemDisplay) {
-        guard let index = items.firstIndex(where: { $0.id == item.id }) else { return }
-        items[index].quantityPicked = max(quantity, 0)
+        edit(item) { $0.quantityPicked = max(quantity, 0) }
     }
 
-    /// Puts everything picked back on the Needed side.
     func moveBackToNeeded(_ item: ShoppingListItemDisplay) {
         setPickedQuantity(0, of: item)
+    }
+
+    // MARK: Editing (planning)
+
+    func setRequestedQuantity(_ quantity: Int, of item: ShoppingListItemDisplay) {
+        edit(item) { $0.quantityRequested = max(quantity, 1) }
+    }
+
+    func remove(_ item: ShoppingListItemDisplay) {
+        library.updateActiveItems { $0.removeAll { $0.id == item.id } }
+    }
+
+    // MARK: Finishing
+
+    /// What finishing would carry over; empty means no confirmation is needed.
+    var leftovers: [ShoppingListItemDisplay] { library.leftovers }
+
+    /// Finishes the list and starts the next one with the leftovers, then
+    /// records a notice for the banner on the new list.
+    func finish(storeName: String?, at date: Date = Date()) {
+        let spent = library.active.totalSpent
+        let carried = library.finishActiveList(storeName: storeName, at: date)
+        finishNotice = FinishNotice(carriedCount: carried, finishedOn: date, spent: spent)
+        // Stock belonged to the finished list's products; the carried ones
+        // are refreshed the next time the store is checked.
+        stockByID = [:]
+    }
+
+    func dismissFinishNotice() {
+        finishNotice = nil
+    }
+
+    private func edit(_ item: ShoppingListItemDisplay, _ change: @escaping (inout ShoppingListItemDisplay) -> Void) {
+        library.updateActiveItems { items in
+            guard let index = items.firstIndex(where: { $0.id == item.id }) else { return }
+            change(&items[index])
+        }
     }
 }
