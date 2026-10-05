@@ -1,0 +1,164 @@
+import SwiftUI
+import RHKrogerAPI
+
+/// Product search results, for picking one or more items to add to a
+/// shopping list. Designed to be presented as a sheet: it owns its own
+/// navigation bar (Back) and a pinned bottom bar (Add to List), so it
+/// doesn't depend on being pushed in an existing `NavigationStack`.
+///
+/// The store is already known by the time this screen is shown, so there's
+/// no location picker or location info here — `locationID` only goes along
+/// for the search call. Likewise there's no cart and no IDs/UPCs on screen;
+/// those stay on `KrogerProduct`, available to whoever handles
+/// `onAddSelected`.
+struct ProductListView: View {
+    @StateObject private var viewModel: ProductListViewModel
+    let onBack: () -> Void
+    let onAddSelected: ([KrogerProduct]) -> Void
+
+    init(
+        viewModel: @autoclosure @escaping () -> ProductListViewModel,
+        onBack: @escaping () -> Void,
+        onAddSelected: @escaping ([KrogerProduct]) -> Void
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel())
+        self.onBack = onBack
+        self.onAddSelected = onAddSelected
+    }
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                resultsHeader
+                Divider()
+                resultsList
+            }
+            .navigationTitle(viewModel.searchTerm.capitalized)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: onBack) {
+                        Label("Back", systemImage: "chevron.left")
+                    }
+                }
+            }
+            .safeAreaInset(edge: .bottom) { footer }
+            .task { await viewModel.loadResults() }
+            .alert("Something went wrong", isPresented: isShowingError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(viewModel.errorMessage ?? "")
+            }
+        }
+    }
+
+    private var isShowingError: Binding<Bool> {
+        Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { isPresented in
+                if !isPresented { viewModel.errorMessage = nil }
+            }
+        )
+    }
+
+    private var resultsHeader: some View {
+        HStack(spacing: 8) {
+            Text(resultCountText)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            if viewModel.isLoading {
+                ProgressView()
+                    .controlSize(.small)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+    }
+
+    private var resultCountText: String {
+        let count = viewModel.items.count
+        let noun = count == 1 ? "result" : "results"
+        return "\(count) \(noun) for \u{201C}\(viewModel.searchTerm)\u{201D}"
+    }
+
+    private var resultsList: some View {
+        Group {
+            if viewModel.items.isEmpty && !viewModel.isLoading {
+                ContentUnavailableView.search
+            } else {
+                List(viewModel.items) { item in
+                    ProductRowView(
+                        item: item,
+                        isSelected: viewModel.isSelected(item),
+                        onToggle: { viewModel.toggleSelection(item) }
+                    )
+                }
+                .listStyle(.plain)
+            }
+        }
+    }
+
+    private var footer: some View {
+        HStack {
+            Text(footerText)
+                .font(.subheadline.weight(.medium))
+            Spacer()
+            Button("Add to List") {
+                onAddSelected(viewModel.confirmSelection())
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(viewModel.selectedCount == 0)
+        }
+        .padding()
+        .background(.bar)
+    }
+
+    private var footerText: String {
+        viewModel.selectedCount == 1 ? "1 item selected" : "\(viewModel.selectedCount) items selected"
+    }
+}
+
+#if DEBUG
+private struct PreviewProductSearching: ProductSearching {
+    func search(
+        term: String?, locationID: String?, productIDs: [String], brands: [String],
+        fulfillment: Set<KrogerFulfillment>, start: Int?, limit: Int?
+    ) async throws -> [KrogerProduct] {
+        [] // Previews seed `items` directly; this is never actually called.
+    }
+}
+
+private let previewItems: [ProductDisplayItem] = [
+    ProductDisplayItem(id: "1", brand: "Meadow Valley", description: "Organic Whole Milk, Half Gallon", category: "Dairy & Eggs", imageURL: nil, regularPrice: 4.49, promoPrice: nil, pricePerUnit: 0.70),
+    ProductDisplayItem(id: "2", brand: "Golden Fields", description: "2% Reduced Fat Milk, Gallon", category: "Dairy & Eggs", imageURL: nil, regularPrice: 3.79, promoPrice: 2.99, pricePerUnit: 0.23),
+    ProductDisplayItem(id: "3", brand: "Sunrise Farms", description: "Lactose-Free Milk, Half Gallon", category: "Dairy & Eggs", imageURL: nil, regularPrice: 4.99, promoPrice: nil, pricePerUnit: 0.78),
+    ProductDisplayItem(id: "4", brand: "Honest Harvest", description: "Whole Milk, Quart", category: "Dairy & Eggs", imageURL: nil, regularPrice: 2.29, promoPrice: nil, pricePerUnit: 0.57),
+]
+
+#Preview("No selection") {
+    ProductListView(
+        viewModel: ProductListViewModel(
+            searchTerm: "milk",
+            locationID: "01400943",
+            products: PreviewProductSearching(),
+            initialItems: previewItems
+        ),
+        onBack: {},
+        onAddSelected: { _ in }
+    )
+}
+
+#Preview("Some selected") {
+    let viewModel = ProductListViewModel(
+        searchTerm: "milk",
+        locationID: "01400943",
+        products: PreviewProductSearching(),
+        initialItems: previewItems
+    )
+    viewModel.toggleSelection(previewItems[1])
+    viewModel.toggleSelection(previewItems[3])
+    return ProductListView(viewModel: viewModel, onBack: {}, onAddSelected: { _ in })
+}
+#endif
