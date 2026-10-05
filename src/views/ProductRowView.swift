@@ -12,7 +12,7 @@ struct ProductRowView: View {
     /// How many will be added; only shown (and editable) while selected.
     let quantity: Int
     let onToggle: () -> Void
-    let onQuantityChange: (Int) -> Void
+    let onQuantityChange: @MainActor @Sendable (Int) -> Void
     let onOpen: () -> Void
 
     var body: some View {
