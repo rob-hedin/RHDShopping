@@ -20,14 +20,54 @@ struct AisleLocationDisplay: Hashable {
     }
 }
 
-/// One row on the shopping list screen: a product (reusing the same
-/// display/pricing rules as the picker) plus where it is in the store and
-/// whether it's been picked up yet.
+/// The two sections of the shopping list screen.
+enum ShoppingListSection: Hashable {
+    case needed, picked
+
+    var title: String {
+        switch self {
+        case .needed: "Needed"
+        case .picked: "Picked"
+        }
+    }
+}
+
+/// One product on the shopping list screen: the product (reusing the same
+/// display/pricing rules as the picker), where it is in the store, and how
+/// many the person wants versus how many they've picked up.
+///
+/// A product can sit in both sections at once: pick 1 of 2 and it shows in
+/// Picked with a quantity of 1 and in Needed with the 1 still remaining.
+/// Picking more than was requested is allowed; `quantityPicked` keeps the
+/// real count so the Picked total reflects what's actually in the cart.
 struct ShoppingListItemDisplay: Identifiable, Hashable {
     let id: String
     let product: ProductDisplayItem
     let aisle: AisleLocationDisplay?
-    var isPickedUp: Bool
+    /// How many the person asked for when adding the product.
+    var quantityRequested: Int = 1
+    var quantityPicked: Int = 0
+    /// Nil when the service reported nothing useful. Treated as unreliable:
+    /// it only ever annotates a row, it never blocks picking it.
+    var stock: ProductDetailDisplay.Stock?
+
+    /// How many are still needed; zero once the request is met or exceeded.
+    var quantityRemaining: Int { max(quantityRequested - quantityPicked, 0) }
+
+    var isOutOfStock: Bool { stock == .outOfStock }
+
+    /// What this section should show for this item, or nil if the item
+    /// doesn't belong in it.
+    func quantity(in section: ShoppingListSection) -> Int? {
+        let quantity = section == .needed ? quantityRemaining : quantityPicked
+        return quantity > 0 ? quantity : nil
+    }
+
+    /// Price of this section's quantity at the price in effect now.
+    /// Items with no known price contribute nothing.
+    func total(in section: ShoppingListSection) -> Decimal {
+        Decimal(quantity(in: section) ?? 0) * (product.effectivePrice ?? 0)
+    }
 }
 
 extension KrogerProduct {
@@ -42,7 +82,14 @@ extension KrogerProduct {
     /// Composes a shopping-list row from this product, reusing `asDisplayItem()`
     /// for the brand/description/category/pricing so both screens stay in
     /// sync on how a product is shown and priced.
-    func asShoppingListItem(isPickedUp: Bool) -> ShoppingListItemDisplay {
-        ShoppingListItemDisplay(id: id, product: asDisplayItem(), aisle: primaryAisleLocation, isPickedUp: isPickedUp)
+    func asShoppingListItem(quantityRequested: Int = 1, quantityPicked: Int = 0) -> ShoppingListItemDisplay {
+        ShoppingListItemDisplay(
+            id: id,
+            product: asDisplayItem(),
+            aisle: primaryAisleLocation,
+            quantityRequested: quantityRequested,
+            quantityPicked: quantityPicked,
+            stock: items.first?.stockLevel.flatMap(Self.stock)
+        )
     }
 }

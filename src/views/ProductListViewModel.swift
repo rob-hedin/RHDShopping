@@ -51,6 +51,12 @@ final class ProductListViewModel: ObservableObject {
         }
     }
 
+    /// Checks the row if it isn't already; unlike `toggleSelection`, calling
+    /// it twice leaves it checked (used when adding from the detail screen).
+    func select(_ item: ProductDisplayItem) {
+        selectedIDs.insert(item.id)
+    }
+
     /// The full-detail products behind the checked rows, for the caller to
     /// hand off to the shopping list.
     func confirmSelection() -> [KrogerProduct] {

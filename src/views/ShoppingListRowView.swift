@@ -1,20 +1,25 @@
 import SwiftUI
 
 /// One row on the shopping list: where to find it in the store, then
-/// brand/description, then price — in that order. No category, no
-/// thumbnail; this list stays compact.
+/// brand/description, then price — in that order — with the quantity on the
+/// trailing edge. No category, no thumbnail; this list stays compact.
+///
+/// The row has no controls of its own: the whole row is tapped (the list
+/// wraps it in a button) to open the pick dialog.
 struct ShoppingListRowView: View {
     let item: ShoppingListItemDisplay
-    let onToggle: () -> Void
+    let section: ShoppingListSection
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
             details
             Spacer(minLength: 0)
-            pickedUpButton
+            trailing
         }
         .padding(.vertical, 8)
-        .opacity(item.isPickedUp ? 0.5 : 1)
+        .opacity(section == .picked ? 0.5 : 1)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
     }
 
     private var details: some View {
@@ -37,6 +42,25 @@ struct ShoppingListRowView: View {
                 .lineLimit(2)
 
             priceRow
+
+            if section == .needed, let tag = stockTag {
+                Text(tag.text)
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(tag.foreground)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 2)
+                    .background(tag.background, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    .padding(.top, 1)
+            }
+        }
+    }
+
+    /// Only the exceptions get a tag; in stock (or unknown) shows nothing.
+    private var stockTag: (text: String, foreground: Color, background: Color)? {
+        switch item.stock {
+        case .lowStock: ("Low stock", .orange, .orange.opacity(0.15))
+        case .outOfStock: ("Out of stock", .red, .red.opacity(0.15))
+        case .inStock, nil: nil
         }
     }
 
@@ -73,38 +97,78 @@ struct ShoppingListRowView: View {
         }
     }
 
-    private var pickedUpButton: some View {
-        Button(action: onToggle) {
-            Image(systemName: item.isPickedUp ? "checkmark.circle.fill" : "circle")
-                .font(.system(size: 22))
-                .foregroundStyle(item.isPickedUp ? Color.accentColor : Color(.tertiaryLabel))
-                .frame(width: 44, height: 44)
-                .contentShape(Rectangle())
+    private var trailing: some View {
+        HStack(spacing: 10) {
+            if section == .picked {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(Color.accentColor)
+                    .accessibilityLabel("Picked")
+            }
+            quantityBadge
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(Text(item.isPickedUp ? "Mark not picked up" : "Mark picked up"))
-        .accessibilityValue(Text(item.product.description))
-        .accessibilityAddTraits(item.isPickedUp ? [.isButton, .isSelected] : .isButton)
+    }
+
+    /// Needed shows what's still left ("1 of 2" once some are picked);
+    /// Picked shows the actual count picked.
+    private var quantityBadge: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 3) {
+            Text("Qty").font(.caption.weight(.medium)).foregroundStyle(.secondary)
+            Text(quantityText).font(.subheadline.weight(.semibold))
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .accessibilityLabel("Quantity \(quantityText)")
+    }
+
+    private var quantityText: String {
+        let quantity = item.quantity(in: section) ?? 0
+        if section == .needed, item.quantityPicked > 0 {
+            return "\(quantity) of \(item.quantityRequested)"
+        }
+        return "\(quantity)"
     }
 }
 
-#Preview("Row — not picked up") {
+#if DEBUG
+private let previewProduct = ProductDisplayItem(
+    id: "1", brand: "Meadow Valley", description: "Organic Whole Milk, Half Gallon",
+    category: "Dairy & Eggs", imageURL: nil, regularPrice: 4.49, promoPrice: nil, pricePerUnit: 0.70
+)
+
+#Preview("Row — needed") {
     ShoppingListRowView(
         item: ShoppingListItemDisplay(
-            id: "1",
-            product: ProductDisplayItem(
-                id: "1", brand: "Meadow Valley", description: "Organic Whole Milk, Half Gallon",
-                category: "Dairy & Eggs", imageURL: nil, regularPrice: 4.49, promoPrice: nil, pricePerUnit: 0.70
-            ),
+            id: "1", product: previewProduct,
             aisle: AisleLocationDisplay(description: "Dairy", side: "Left", shelfNumber: "3"),
-            isPickedUp: false
+            quantityRequested: 2
         ),
-        onToggle: {}
+        section: .needed
     )
     .padding()
 }
 
-#Preview("Row — picked up, on promo") {
+#Preview("Row — needed, low stock") {
+    ShoppingListRowView(
+        item: ShoppingListItemDisplay(id: "1", product: previewProduct, aisle: nil, stock: .lowStock),
+        section: .needed
+    )
+    .padding()
+}
+
+#Preview("Row — needed, out of stock, partly picked") {
+    ShoppingListRowView(
+        item: ShoppingListItemDisplay(
+            id: "1", product: previewProduct, aisle: nil,
+            quantityRequested: 2, quantityPicked: 1, stock: .outOfStock
+        ),
+        section: .needed
+    )
+    .padding()
+}
+
+#Preview("Row — picked, on promo") {
     ShoppingListRowView(
         item: ShoppingListItemDisplay(
             id: "2",
@@ -113,25 +177,10 @@ struct ShoppingListRowView: View {
                 category: "Dairy & Eggs", imageURL: nil, regularPrice: 3.79, promoPrice: 2.99, pricePerUnit: 0.23
             ),
             aisle: AisleLocationDisplay(description: "Dairy", side: "Left", shelfNumber: "2"),
-            isPickedUp: true
+            quantityPicked: 1
         ),
-        onToggle: {}
+        section: .picked
     )
     .padding()
 }
-
-#Preview("Row — no aisle data") {
-    ShoppingListRowView(
-        item: ShoppingListItemDisplay(
-            id: "3",
-            product: ProductDisplayItem(
-                id: "3", brand: "Clover Brook", description: "Chocolate Milk, Half Gallon",
-                category: "Dairy & Eggs", imageURL: nil, regularPrice: 3.49, promoPrice: nil, pricePerUnit: 0.55
-            ),
-            aisle: nil,
-            isPickedUp: false
-        ),
-        onToggle: {}
-    )
-    .padding()
-}
+#endif

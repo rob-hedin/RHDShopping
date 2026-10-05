@@ -2,16 +2,27 @@ import SwiftUI
 
 /// One row in the product picker list: thumbnail, brand/description/category,
 /// price, and a checkbox — the card-style layout from the design exploration.
+///
+/// Two separate tap targets: the checkbox toggles selection, and the rest of
+/// the row opens the product's detail screen.
 struct ProductRowView: View {
     let item: ProductDisplayItem
     let isSelected: Bool
     let onToggle: () -> Void
+    let onOpen: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
-            thumbnail
-            details
-            Spacer(minLength: 0)
+            Button(action: onOpen) {
+                HStack(spacing: 12) {
+                    thumbnail
+                    details
+                    Spacer(minLength: 0)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Shows product details")
             selectionButton
         }
         .padding(.vertical, 6)
@@ -128,7 +139,8 @@ struct ProductRowView: View {
             pricePerUnit: 0.70
         ),
         isSelected: false,
-        onToggle: {}
+        onToggle: {},
+        onOpen: {}
     )
     .padding()
 }
@@ -146,7 +158,8 @@ struct ProductRowView: View {
             pricePerUnit: 0.45
         ),
         isSelected: true,
-        onToggle: {}
+        onToggle: {},
+        onOpen: {}
     )
     .padding()
 }
@@ -164,7 +177,8 @@ struct ProductRowView: View {
             pricePerUnit: nil
         ),
         isSelected: false,
-        onToggle: {}
+        onToggle: {},
+        onOpen: {}
     )
     .padding()
 }

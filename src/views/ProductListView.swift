@@ -11,23 +11,33 @@ import RHKrogerAPI
 /// for the search call. Likewise there's no cart and no IDs/UPCs on screen;
 /// those stay on `KrogerProduct`, available to whoever handles
 /// `onAddSelected`.
+///
+/// Tapping a row (outside its checkbox) pushes the product's detail screen
+/// onto this view's own stack. "Add to List" there just checks the row and
+/// returns here, so adding still happens in one place: the footer button.
 struct ProductListView: View {
     @StateObject private var viewModel: ProductListViewModel
+    @State private var path: [ProductDisplayItem] = []
     let onBack: () -> Void
     let onAddSelected: ([KrogerProduct]) -> Void
+    /// Builds the detail screen's view model for a tapped row. The caller
+    /// owns the client (and store), so the list doesn't need to.
+    let makeDetailViewModel: (ProductDisplayItem) -> ProductDetailViewModel
 
     init(
         viewModel: @autoclosure @escaping () -> ProductListViewModel,
+        makeDetailViewModel: @escaping (ProductDisplayItem) -> ProductDetailViewModel,
         onBack: @escaping () -> Void,
         onAddSelected: @escaping ([KrogerProduct]) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel())
+        self.makeDetailViewModel = makeDetailViewModel
         self.onBack = onBack
         self.onAddSelected = onAddSelected
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             VStack(spacing: 0) {
                 resultsHeader
                 Divider()
@@ -44,6 +54,15 @@ struct ProductListView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) { footer }
+            .navigationDestination(for: ProductDisplayItem.self) { item in
+                ProductDetailView(
+                    viewModel: makeDetailViewModel(item),
+                    onAddToList: { _ in
+                        viewModel.select(item)
+                        path.removeAll()
+                    }
+                )
+            }
             .task { await viewModel.loadResults() }
             .alert("Something went wrong", isPresented: isShowingError) {
                 Button("OK", role: .cancel) {}
@@ -92,7 +111,8 @@ struct ProductListView: View {
                     ProductRowView(
                         item: item,
                         isSelected: viewModel.isSelected(item),
-                        onToggle: { viewModel.toggleSelection(item) }
+                        onToggle: { viewModel.toggleSelection(item) },
+                        onOpen: { path.append(item) }
                     )
                 }
                 .listStyle(.plain)
@@ -130,6 +150,16 @@ private struct PreviewProductSearching: ProductSearching {
     }
 }
 
+private struct PreviewProductFetching: ProductFetching {
+    func product(id: String, locationID: String?) async throws -> KrogerProduct {
+        throw CancellationError() // Previews never open the detail screen's network call.
+    }
+}
+
+@MainActor private func previewDetailViewModel(_ item: ProductDisplayItem) -> ProductDetailViewModel {
+    ProductDetailViewModel(productID: item.id, locationID: "01400943", products: PreviewProductFetching())
+}
+
 private let previewItems: [ProductDisplayItem] = [
     ProductDisplayItem(id: "1", brand: "Meadow Valley", description: "Organic Whole Milk, Half Gallon", category: "Dairy & Eggs", imageURL: nil, regularPrice: 4.49, promoPrice: nil, pricePerUnit: 0.70),
     ProductDisplayItem(id: "2", brand: "Golden Fields", description: "2% Reduced Fat Milk, Gallon", category: "Dairy & Eggs", imageURL: nil, regularPrice: 3.79, promoPrice: 2.99, pricePerUnit: 0.23),
@@ -145,6 +175,7 @@ private let previewItems: [ProductDisplayItem] = [
             products: PreviewProductSearching(),
             initialItems: previewItems
         ),
+        makeDetailViewModel: previewDetailViewModel,
         onBack: {},
         onAddSelected: { _ in }
     )
@@ -159,6 +190,6 @@ private let previewItems: [ProductDisplayItem] = [
     )
     viewModel.toggleSelection(previewItems[1])
     viewModel.toggleSelection(previewItems[3])
-    return ProductListView(viewModel: viewModel, onBack: {}, onAddSelected: { _ in })
+    return ProductListView(viewModel: viewModel, makeDetailViewModel: previewDetailViewModel, onBack: {}, onAddSelected: { _ in })
 }
 #endif

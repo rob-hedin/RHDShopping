@@ -71,7 +71,7 @@ extension KrogerProduct {
     /// The service reports `promo` as `0`, not absent, when no discount is
     /// running — so "there's a promo" means a positive promo price that
     /// actually undercuts the regular one, not merely a non-nil value.
-    private static func activePromo(_ price: KrogerItemPrice?) -> Decimal? {
+    static func activePromo(_ price: KrogerItemPrice?) -> Decimal? {
         guard let promo = price?.promo, promo > 0 else { return nil }
         if let regular = price?.regular, promo >= regular { return nil }
         return promo
